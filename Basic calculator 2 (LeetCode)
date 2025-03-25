@@ -1,0 +1,93 @@
+int precedence(char opr)
+{
+    switch (opr)
+    {
+    case '+':
+    case '-':
+        return 1;
+    case '*':
+    case '/':
+        return 2;
+    case '^':
+        return 3;
+    default:
+        return -1;
+    }
+}
+
+int calculate(char* s) {
+    int len = strlen(s);
+    int operand[100], operator[100];
+    int top1 = -1, top2 = -1;
+    for (int i = 0; i < len; i++)
+    {
+        char ch = s[i];
+        if (isdigit(ch)){
+            int num = 0;
+            while (isdigit(s[i]))
+            {
+                num = num * 10 + (s[i] - 48);
+                i++;
+            }
+            i--;
+            operand[++top1] = num;
+        }
+        else if (ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^'){
+            if (top2 == -1){
+                operator[++top2] = ch;
+            }
+            else{
+                while (top2 != -1 && precedence(operator[top2]) >= precedence(ch)){
+                    int x = operand[top1--];
+                    int y = operand[top1--];
+                    char opr = operator[top2--];
+                    int z;
+                    switch (opr){
+                    case '+':
+                        z = y + x;
+                        break;
+                    case '-':
+                        z = y - x;
+                        break;
+                    case '*':
+                        z = y * x;
+                        break;
+                    case '/':
+                        z = y / x;
+                        break;
+                    case '^':
+                        z = pow(y, x);
+                        break;
+                    }
+                    operand[++top1] = z;
+                }
+                operator[++top2] = ch;
+            }
+        }
+    }
+    while (top2 != -1){
+        int x = operand[top1--];
+        int y = operand[top1--];
+        char opr = operator[top2--];
+        int z;
+        switch (opr){
+        case '+':
+            z = y + x;
+            break;
+        case '-':
+            z = y - x;
+            break;
+        case '*':
+            z = y * x;
+            break;
+        case '/':
+            z = y / x;
+            break;
+        case '^':
+            z = pow(y, x);
+            break;
+        }
+        operand[++top1] = z;
+    }
+    return operand[top1--];
+}
