@@ -1,0 +1,78 @@
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <stdlib.h>
+#include<limits.h>
+
+typedef struct node{
+    int data;
+    struct node* left;
+    struct node* right;
+}node;
+
+node* root = NULL;
+
+node* createnode(int val){
+    if(val == -1)
+        return NULL;
+    node* newnode = (node*)malloc(sizeof(node));
+    newnode->data = val;
+    newnode->left = newnode->right = NULL;
+    return newnode;
+}
+
+node* insert(node* root,int val){
+    if(root == NULL){
+        return createnode(val);
+    }
+    node* queue[100];
+    int front=0,rear=0;
+    queue[rear++] = root;
+    
+    while(front != rear){
+        node* temp = queue[front++];
+        if(temp->left == NULL){
+            temp->left = createnode(val);
+            break;
+        }
+        else if(temp->right == NULL){
+            temp->right = createnode(val);
+            break;
+        }
+        else{
+            queue[rear++] = temp->left;
+            queue[rear++] = temp->right;
+        }
+    }
+    return root;
+}
+
+int findmin(node* root){
+    if(root == NULL)
+        return INT_MAX;
+    
+    int leftmin = findmin(root->left);
+    int rightmin = findmin(root->right);
+    int current = root->data;
+    
+    if(leftmin < current)
+        current = leftmin;
+    if(rightmin < current)
+        current = rightmin;
+    
+    return current;
+}
+
+int main() {
+    int n,val;
+    scanf("%d",&n);
+    for(int i=0;i<n;i++){
+        scanf("%d",&val);
+        root = insert(root,val);
+    }
+    
+    int minVal = findmin(root);
+    printf("%d",minVal);
+
+    return 0;
+}
