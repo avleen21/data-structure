@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <stdlib.h>
+
+typedef struct node{
+    int data;
+    struct node* left;
+    struct node* right;
+}node;
+
+node* root = NULL;
+
+node* createnode(int val){
+    node* newnode = (node*)malloc(sizeof(node));
+    newnode->data = val;
+    newnode->left=newnode->right = NULL;
+    return newnode;
+}
+
+node* insert(node* root,int val){
+    if(root == NULL)
+        return createnode(val);
+    else if(val < root->data)
+        root->left = insert(root->left,val);
+    else if(val > root->data)
+        root->right = insert(root->right,val);
+    
+    return root;
+}
+
+int sum(node* root){
+    if(root == NULL) 
+        return 0;
+    else
+        return root->data+sum(root->left)+sum(root->right);
+    
+}
+
+int main() {
+    int n,val;
+    scanf("%d",&n);
+    for(int i=0;i<n;i++){
+        scanf("%d",&val);
+        root = insert(root,val);
+    }
+    int totalSum = sum(root);
+    printf("%d",totalSum);
+    return 0;
+}
