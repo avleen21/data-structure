@@ -33,7 +33,7 @@ int sum(node* root){
     if(root == NULL) 
         return 0;
     else
-        return root->data+sum(root->left)+sum(root->right);
+        return root->data + sum(root->left) + sum(root->right);
     
 }
 
